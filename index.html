@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Loops - Handcrafted Crochet Creations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: #faf8f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #d4a5a5 0%, #c97d7d 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Palatino', serif;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: #fff;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #c97d7d;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #a65d5d;
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #c97d7d;
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background: #c97d7d;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .cart-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #a65d5d;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+            color: #c97d7d;
+        }
+
+        .cart-item-remove {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .cart-item-remove:hover {
+            background: #d63031;
+        }
+
+        .cart-footer {
+            border-top: 2px solid #eee;
+            padding: 1.5rem;
+            flex-shrink: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #a65d5d;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .customer-form {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .customer-form h3 {
+            color: #a65d5d;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .customer-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .customer-form label {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .customer-form input,
+        .customer-form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .customer-form input:focus,
+        .customer-form textarea:focus {
+            outline: none;
+            border-color: #c97d7d;
+        }
+
+        .customer-form textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .btn-send {
+            background: #6c757d;
+            font-weight: 600;
+        }
+
+        .btn-send:hover {
+            background: #545b62;
+        }
+
+        .btn-apple {
+            background: #000;
+            font-weight: 600;
+        }
+
+        .btn-apple:hover {
+            background: #333;
+        }
+
+        .btn-google {
+            background: #4285f4;
+            font-weight: 600;
+        }
+
+        .btn-google:hover {
+            background: #357ae8;
+        }
+
+        /* Admin Panel Styles */
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #333;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 999;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .admin-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .admin-panel {
+            position: fixed;
+            left: -400px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            transition: left 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .admin-panel.open {
+            left: 0;
+        }
+
+        .admin-header {
+            background: #333;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .admin-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .admin-section {
+            margin-bottom: 2rem;
+        }
+
+        .admin-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #c97d7d;
+            padding-bottom: 0.5rem;
+        }
+
+        .todo-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid #c97d7d;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+            border-left-color: #6c757d;
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .todo-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .todo-time {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+
+        .add-task-btn {
+            background: #c97d7d;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .add-task-btn:hover {
+            background: #a65d5d;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e8d5d5;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-family: inherit;
+        }
+
+        .clear-completed {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .clear-completed:hover {
+            background: #545b62;
+        }
+
+        @media (max-width: 768px) {
+            .admin-panel {
+                width: 100%;
+                left: -100%;
+            }
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(to bottom, rgba(212, 165, 165, 0.1), transparent);
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            color: #a65d5d;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .products {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f5e6e6, #e8d5d5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid rgba(201, 125, 125, 0.2);
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.4) 0%, transparent 60%);
+        }
+
+        .product-image::after {
+            content: 'Handcrafted Amigurumi';
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.7rem;
+            color: rgba(166, 93, 93, 0.6);
+            font-family: 'Georgia', serif;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            color: #a65d5d;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .product-info p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            color: #c97d7d;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #c97d7d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #a65d5d;
+        }
+
+        .btn-pattern {
+            background: #8b9dc3;
+            margin-top: 0.5rem;
+        }
+
+        .btn-pattern:hover {
+            background: #6b7da3;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pattern-price {
+            font-size: 0.95rem;
+            color: #8b9dc3;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .size-selector {
+            margin: 1rem 0;
+        }
+
+        .size-selector label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .size-selector select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #e8d5d5;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: white;
+        }
+
+        .about {
+            background: white;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .about h2 {
+            color: #a65d5d;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .about p {
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            text-align: center;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .contact {
+            background: linear-gradient(135deg, #d4a5a5 0%, #c97d7d 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin: 3rem 0;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-icon" onclick="toggleCart()">
+        🛒
+        <span class="cart-badge" id="cartBadge">0</span>
+    </div>
+
+    <!-- Admin Panel Toggle (only visible on your computer) -->
+    <div class="admin-toggle" onclick="toggleAdmin()" id="adminToggle" style="display: none;">
+        ⚙️
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>📋 Order Manager</h2>
+            <span class="admin-close" onclick="toggleAdmin()">✕</span>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <h3>⚠️ Unpaid Inquiries</h3>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Customers who inquired but haven't paid yet</p>
+                <div id="unpaidInquiries"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>📦 Pending Deliveries</h3>
+                <div id="pendingTasks"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>✅ Completed Tasks</h3>
+                <div id="completedTasks"></div>
+                <button class="clear-completed" onclick="clearCompleted()">Clear Completed</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>➕ Add Custom Task</h3>
+                <input type="text" class="task-input" id="customTaskInput" placeholder="Task description...">
+                <button class="add-task-btn" onclick="addCustomTask()">Add Task</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>🧪 Test Pattern Opening</h3>
+                <button class="add-task-btn" onclick="testPatternOpen()">Test Open Pattern (Bunny)</button>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">Click to test if patterns can open in new tabs</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Shopping Cart</h2>
+            <span class="cart-close" onclick="toggleCart()">✕</span>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <div class="customer-form">
+                <h3>Contact Information</h3>
+                <div class="form-group">
+                    <label for="customerName">Full Name *</label>
+                    <input type="text" id="customerName" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email *</label>
+                    <input type="email" id="customerEmail" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number *</label>
+                    <input type="tel" id="customerPhone" required placeholder="(859) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Shipping/Contact Address</label>
+                    <textarea id="customerAddress" placeholder="123 Main St, City, State, ZIP (Required for physical items)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="customerNotes">Order Notes (Optional)</label>
+                    <textarea id="customerNotes" placeholder="Any special requests or questions?"></textarea>
+                </div>
+            </div>
+            <div class="payment-methods">
+                <button class="btn btn-send" onclick="sendOrderToCustomer()">📧 Send Inquiry to Cozy Loops</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <h1>🧶 Cozy Loops</h1>
+        <p>Handcrafted Crochet Creations Made with Love</p>
+    </header>
+
+    <nav>
+        <a href="#products">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Welcome to Our Cozy Corner</h2>
+            <p>Each amigurumi is lovingly handcrafted with premium yarn and attention to every detail. Find your perfect cuddle buddy or learn to make your own with our patterns!</p>
+            <p style="background: white; color: #c97d7d; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold; font-size: 1.1rem;">
+                🚚 We deliver to your door or meet in person! 🤝
+            </p>
+            <p style="background: #28a745; color: white; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold; font-size: 1.1rem;">
+                💵 If we deliver, have money ready at the door! 💳
+            </p>
+        </section>
+
+        <section id="products">
+            <h2 style="text-align: center; color: #a65d5d; font-size: 2.5rem; margin-bottom: 2rem;">Our Collection</h2>
+            <div class="products" id="productGrid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <h2>Our Story</h2>
+            <p>Welcome to Cozy Loops! What started as a love for creating tiny crochet creatures has grown into a full collection of adorable amigurumi friends.</p>
+            <p>Every character is handmade using the Japanese art of amigurumi - creating small, stuffed yarn creatures. We use premium acrylic and cotton yarns, safety eyes, and hypoallergenic stuffing to ensure each friend is safe, soft, and built to last.</p>
+            <p>Whether you're looking for a unique gift, a nursery companion, or just a cute desk buddy, each amigurumi is made with love and comes with its own special personality!</p>
+            <p style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 6px; margin-top: 1.5rem; font-size: 0.95rem; color: #856404;">
+                <strong>📝 Pattern Policy:</strong> Crochet patterns are available for $10 each, but must be purchased together with at least one finished amigurumi item. This ensures you have a reference piece while learning!
+            </p>
+            <p style="background: #28a745; color: white; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; text-align: center; font-size: 1.2rem; font-weight: bold;">
+                💵 If we deliver, have money ready at the door! 💳<br>
+                <span style="font-size: 1rem; font-weight: normal; opacity: 0.95;">Cash, Venmo, Zelle, or card accepted on delivery</span>
+            </p>
+            <p style="background: linear-gradient(135deg, #d4a5a5, #c97d7d); color: white; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; text-align: center; font-size: 1.2rem; font-weight: bold;">
+                🚚 We deliver to your door or meet in person! 🤝<br>
+                <span style="font-size: 1rem; font-weight: normal; opacity: 0.95;">Convenient delivery options available in Castle Rock and surrounding areas</span>
+            </p>
+        </section>
+
+        <section class="contact" id="contact">
+            <h2>Get in Touch</h2>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                📍 Address: <strong style="color: white; font-weight: bold;">2058 Coach House Loop, Castle Rock, Colorado</strong>
+            </p>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                📞 Call or Text: <a href="tel:8592472373" style="color: white; text-decoration: underline; font-weight: bold;">(859) 247-2373</a>
+            </p>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                📧 Email: <a href="mailto:atlasjrector@gmail.com" style="color: white; text-decoration: underline; font-weight: bold;">atlasjrector@gmail.com</a>
+            </p>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                🚚 <strong style="color: white;">We deliver to your door or meet in person!</strong>
+            </p>
+            <p style="text-align: center; font-size: 1.3rem; margin-bottom: 0.5rem; background: #28a745; padding: 1rem; border-radius: 8px; font-weight: bold;">
+                💵 If we deliver, have money ready at the door! 💳
+            </p>
+            <p style="text-align: center; font-size: 1rem; margin-bottom: 1.5rem; opacity: 0.95;">
+                📅 Weekend Hours: Saturday & Sunday 10am - 6pm
+            </p>
+            <form class="contact-form" id="contactForm" onsubmit="handleContact(event)">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required placeholder="Tell us about your custom order or ask any questions!"></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+            </form>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Cozy Loops. All rights reserved.</p>
+        <p>📍 2058 Coach House Loop, Castle Rock, Colorado</p>
+        <p>📞 (859) 247-2373 | 📧 atlasjrector@gmail.com</p>
+        <p>Handcrafted with love, one stitch at a time.</p>
+        <div class="social-links">
+            <a href="#">Instagram</a> | 
+            <a href="#">Facebook</a> | 
+            <a href="#">Pinterest</a>
+        </div>
+    </footer>
+
+    <script>
+        // ========================================
+        // TO ADD PHOTOS OF YOUR AMIGURUMI:
+        // ========================================
+        // 1. Upload your photos to an image hosting service like:
+        //    - Imgur (https://imgur.com)
+        //    - Google Drive (make public & get share link)
+        //    - Dropbox
+        //    - Or your own website
+        // 
+        // 2. Get the direct image URL (must end in .jpg, .png, etc)
+        // 
+        // 3. Add the URL to the "image" field in the products array below
+        //    Example: image: ""
+        // 
+        // 4. The site will automatically show your photo instead of emoji!
+        // ========================================
+
+        // Product data
+        const products = [
+            { id: 1, name: "Can't Stop the Feeling", emoji: "🧸", image: "", description: "A timeless cuddle companion with movable limbs and embroidered safety eyes. Soft and huggable!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 2, name: "Hopping on Sunshine", emoji: "🐰", image: "", description: "Adorable rabbit with long, floppy ears and a fluffy tail. Perfect for Easter or any day!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 3, name: "Paws and Relax", emoji: "🐶", image: "", description: "Loyal puppy friend with floppy ears and wagging tail. Man's best amigurumi!", prices: { small: 13, medium: 19, large: 25 } },
+            { id: 4, name: "Purr-fect Companion", emoji: "🐱", image: "", description: "Sleepy kitten with soft stripes and tiny pink nose. Meow-velous!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 5, name: "Eye of the Tiger", emoji: "🐯", image: "", description: "Fierce but friendly tiger with bold stripes. Roar-some addition to any collection!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 6, name: "King of the Jungle", emoji: "🦁", image: "", description: "Majestic lion with fluffy mane and brave heart. Pride of your shelf!", prices: { small: 16, medium: 23, large: 32 } },
+            { id: 7, name: "Trunks Up", emoji: "🐘", image: "", description: "Gentle elephant with big ears and wrinkled trunk. Never forgets to be adorable!", prices: { small: 16, medium: 24, large: 34 } },
+            { id: 8, name: "Sweet Dreams", emoji: "🐻", image: "", description: "Cuddly panda munching bamboo with peaceful expression. Bear-y cute!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 9, name: "Catch the Wave", emoji: "🐬", image: "", description: "Playful dolphin ready to flip and splash. Making waves in cuteness!", prices: { small: 14, medium: 20, large: 28 } },
+            { id: 10, name: "Slow and Steady", emoji: "🐢", image: "", description: "Wise turtle with patterned shell. Taking life one stitch at a time!", prices: { small: 13, medium: 20, large: 28 } },
+            { id: 11, name: "Ribbit Ribbit", emoji: "🐸", image: "", description: "Cheerful frog with big smile and bulging eyes. Toad-ally awesome!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 12, name: "Busy as a Bee", emoji: "🐝", image: "", description: "Buzzing bumblebee with stripes and tiny wings. Sweet as honey!", prices: { small: 11, medium: 16, large: 23 } },
+            { id: 13, name: "Flutter By", emoji: "🦋", image: "", description: "Delicate butterfly with colorful wings. Metamorphosis complete!", prices: { small: 12, medium: 17, large: 24 } },
+            { id: 14, name: "Lucky Lady", emoji: "🐞", image: "", description: "Spotted ladybug bringing good fortune. Beetle believe it's cute!", prices: { small: 10, medium: 15, large: 22 } },
+            { id: 15, name: "Eight Legged Friend", emoji: "🕷️", image: "", description: "Friendly spider with cute fangs (not scary at all!). Web of cuteness!", prices: { small: 12, medium: 17, large: 24 } },
+            { id: 16, name: "Inky Dinky Spider", emoji: "🕸️", image: "", description: "Tiny spider sitting in elaborate web. Caught in adorableness!", prices: { small: 13, medium: 19, large: 25 } },
+            { id: 17, name: "Flying Colors", emoji: "🦅", image: "", description: "Soaring eagle with majestic wingspan. Freedom never looked so cuddly!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 18, name: "Wise Old Owl", emoji: "🦉", image: "", description: "Scholarly owl perched and ready to hoot. Who's adorable? You are!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 19, name: "Early Bird", emoji: "🐦", image: "", description: "Cheerful songbird with tiny beak and round body. Tweet dreams!", prices: { small: 11, medium: 17, large: 24 } },
+            { id: 20, name: "Waddle On", emoji: "🐧", image: "", description: "Dapper penguin in natural tuxedo. Ice to meet you!", prices: { small: 13, medium: 20, large: 28 } },
+            { id: 21, name: "Pink Flamingo", emoji: "🦩", image: "", description: "Elegant flamingo standing on one leg. Pretty in pink!", prices: { small: 14, medium: 21, large: 30 } },
+            { id: 22, name: "Duck Duck Goose", emoji: "🦆", image: "", description: "Quacking duck with orange bill and webbed feet. Just ducky!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 23, name: "Swan Song", emoji: "🦢", image: "", description: "Graceful swan with long neck and pure white feathers. Swan-derful!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 24, name: "Pretty Polly", emoji: "🦜", image: "", description: "Colorful parrot with tropical flair. Talks the talk, walks the walk!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 25, name: "Magical Unicorn", emoji: "🦄", image: "", description: "Mystical unicorn with rainbow mane and sparkly horn. Believe in magic!", prices: { small: 17, medium: 25, large: 35 } },
+            { id: 26, name: "Little Lamb", emoji: "🐑", image: "", description: "Fluffy sheep with curly coat. Counting sheep never felt so good!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 27, name: "Oink Oink", emoji: "🐷", image: "", description: "Happy pig with curly tail and snout. Bringing home the bacon... of cuteness!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 28, name: "Moo-velous", emoji: "🐮", image: "", description: "Spotted cow with bell and gentle moo. Udderly adorable!", prices: { small: 14, medium: 21, large: 30 } },
+            { id: 29, name: "Neigh-bor", emoji: "🐴", image: "", description: "Galloping horse with flowing mane. Stable relationship guaranteed!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 30, name: "Goat My Attention", emoji: "🐐", image: "", description: "Playful goat ready to climb anything. Greatest of all time!", prices: { small: 14, medium: 20, large: 28 } },
+            { id: 31, name: "Hop To It", emoji: "🦘", image: "", description: "Bouncing kangaroo with joey in pouch. Double the cuteness!", prices: { small: 16, medium: 23, large: 32 } },
+            { id: 32, name: "Slow Motion", emoji: "🦥", image: "", description: "Adorable sloth hanging upside down. Taking life slow!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 33, name: "Ring My Bell", emoji: "🔔", image: "", description: "Holiday bell with ribbon and jingle. Ring in the cheer!", prices: { small: 10, medium: 15, large: 21 } },
+            { id: 34, name: "Bright Idea", emoji: "💡", image: "", description: "Light bulb moment captured in yarn. Illuminating cuteness!", prices: { small: 11, medium: 16, large: 23 } },
+            { id: 35, name: "Star Bright", emoji: "⭐", image: "", description: "Twinkling star with happy face. Wish upon this star!", prices: { small: 10, medium: 15, large: 22 } },
+            { id: 36, name: "Over the Rainbow", emoji: "🌈", image: "", description: "Colorful rainbow arc with clouds. Somewhere over the rainbow!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 37, name: "Sunny Day", emoji: "☀️", image: "", description: "Bright sunshine with warm rays. Here comes the sun!", prices: { small: 11, medium: 17, large: 24 } },
+            { id: 38, name: "Cloud Nine", emoji: "☁️", image: "", description: "Fluffy cloud with silver lining. Head in the clouds!", prices: { small: 10, medium: 16, large: 23 } },
+            { id: 39, name: "Apple of My Eye", emoji: "🍎", image: "", description: "Shiny red apple with leaf and stem. An apple a day!", prices: { small: 10, medium: 15, large: 22 } },
+            { id: 40, name: "Berry Sweet", emoji: "🍓", image: "", description: "Plump strawberry with seeds and leaves. Berry good choice!", prices: { small: 9, medium: 14, large: 20 } },
+            { id: 41, name: "You're a Peach", emoji: "🍑", image: "", description: "Fuzzy peach with rosy cheeks. Sweet as can be!", prices: { small: 10, medium: 15, large: 22 } },
+            { id: 42, name: "Going Bananas", emoji: "🍌", image: "", description: "Yellow banana bunch with happy peel. A-peeling personality!", prices: { small: 10, medium: 15, large: 21 } },
+            { id: 43, name: "Slice of Life", emoji: "🍕", image: "", description: "Cheesy pizza slice with toppings. Piece of my heart!", prices: { small: 11, medium: 17, large: 24 } },
+            { id: 44, name: "Taco 'Bout Cute", emoji: "🌮", image: "", description: "Stuffed taco with all the fixings. Let's taco 'bout how adorable!", prices: { small: 11, medium: 17, large: 24 } },
+            { id: 45, name: "Cheeseburger in Paradise", emoji: "🍔", image: "", description: "Juicy burger with all the fixings. Patty-fectly delicious!", prices: { small: 13, medium: 20, large: 28 } },
+            { id: 46, name: "Cookie Monster", emoji: "🍪", image: "", description: "Chocolate chip cookie with happy face. Baked with love!", prices: { small: 11, medium: 17, large: 24 } },
+            { id: 47, name: "Watermelon Sugar", emoji: "🍉", image: "", description: "Watermelon slice with seeds and sweet smile. You're one in a melon!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 48, name: "Puff the Magic Dragon", emoji: "🐉", image: "", description: "Mythical dragon with wings and scales. Fire-breathing cuteness!", prices: { small: 17, medium: 25, large: 35 } },
+            { id: 49, name: "Baby Beluga", emoji: "🐳", image: "", description: "Gentle giant whale with sweet expression. Making a big splash!", prices: { small: 15, medium: 23, large: 32 } },
+            { id: 50, name: "Stomp Stomp", emoji: "🦖", image: "", description: "Tiny stegosaurus with spikes and plates. Prehistoric perfection!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 51, name: "Rudolph the Red", emoji: "🦌", image: "", description: "Adorable deer with little antlers and spotted coat. Fawn-tastic friend!", prices: { small: 14, medium: 21, large: 30 } },
+            { id: 52, name: "Dancing in the Moonlight", emoji: "🐙", image: "", description: "Colorful jellyfish with flowing tentacles. Simply mesmerizing!", prices: { small: 14, medium: 20, large: 28 } },
+            { id: 53, name: "Hungry Like the Wolf", emoji: "🐺", image: "", description: "Fluffy wolf with pointed ears and bushy tail. Howl-arious companion!", prices: { small: 15, medium: 23, large: 32 } },
+            { id: 54, name: "Lazy Song", emoji: "🐨", image: "", description: "Super chill sloth hanging from a branch. Taking it slow and steady!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 55, name: "Pretty as a Peacock", emoji: "🦚", image: "", description: "Majestic peacock with colorful tail feathers. Strutting in style!", prices: { small: 16, medium: 24, large: 34 } },
+            { id: 56, name: "Three Blind Mice", emoji: "🐭", image: "", description: "Tiny mouse with round ears and long tail. Squeak-y clean cuteness!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 57, name: "I Want a Hippopotamus", emoji: "🦛", image: "", description: "Chubby hippopotamus with big mouth and little ears. Heavy on the cute!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 58, name: "Rocky Raccoon", emoji: "🦝", image: "", description: "Mischievous raccoon with mask and ringed tail. Stealing hearts, not garbage!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 59, name: "Surfin' Safari", emoji: "🦈", image: "", description: "Friendly shark with big smile and fin. Jaws-ome friend!", prices: { small: 15, medium: 22, large: 30 } },
+            { id: 60, name: "Feeling Crabby", emoji: "🦀", image: "", description: "Cute crab with big claws and sideways walk. Shell yeah!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 61, name: "Under the Sea", emoji: "🐠", image: "", description: "Tropical fish with colorful stripes. Swimming in style!", prices: { small: 12, medium: 18, large: 25 } },
+            { id: 62, name: "Squirrel Friend", emoji: "🐿️", image: "", description: "Bushy-tailed squirrel with acorn. Nuts about you!", prices: { small: 13, medium: 20, large: 28 } },
+            { id: 63, name: "Hedgehog Hug", emoji: "🦔", image: "", description: "Spiky but sweet hedgehog rolled up. Prickly on the outside, soft inside!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 64, name: "Bat Out of Yarn", emoji: "🦇", image: "", description: "Adorable bat hanging upside down. Fang-tastic companion!", prices: { small: 13, medium: 20, large: 28 } },
+            { id: 65, name: "Llama Drama", emoji: "🦙", image: "", description: "Fluffy llama with long neck and sweet face. No prob-llama!", prices: { small: 16, medium: 24, large: 34 } }
+,
+            { id: 66, name: "Cluck Cluck", emoji: "🐔", image: "", description: "Fluffy chicken with red comb and bright feathers. Egg-cellent addition!", prices: { small: 13, medium: 19, large: 27 } },
+            { id: 67, name: "Narwhal Magic", emoji: "🐋", image: "", description: "Unicorn of the sea with magical horn. Ocean legend!", prices: { small: 14, medium: 21, large: 29 } },
+            { id: 68, name: "Otter This World", emoji: "🦦", image: "", description: "Playful otter floating on back. Otterly adorable!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 69, name: "Shell Shocked", emoji: "🐚", image: "", description: "Beautiful seashell with pearly sheen. Ocean treasure!", prices: { small: 10, medium: 14, large: 20 } },
+            { id: 70, name: "Seal of Approval", emoji: "🦭", image: "", description: "Happy seal clapping flippers. Sealed with love!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 71, name: "Cupcake Cutie", emoji: "🧁", image: "", description: "Sweet cupcake with frosting and sprinkles. Baked with love!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 72, name: "Donut Worry", emoji: "🍩", image: "", description: "Glazed donut with rainbow sprinkles. Hole lot of fun!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 73, name: "Ice Cream Dream", emoji: "🍦", image: "", description: "Swirled ice cream cone. Chillin' and sweet!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 74, name: "Cactus Cutie", emoji: "🌵", image: "", description: "Prickly cactus with flower on top. Desert darling!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 75, name: "Sunflower Smiles", emoji: "🌻", image: "", description: "Bright sunflower facing the sun. Growing happiness!", prices: { small: 12, medium: 17, large: 24 } },
+            { id: 76, name: "Cherry Bomb", emoji: "🍒", image: "", description: "Sweet cherry pair on stem. Double the delight!", prices: { small: 10, medium: 14, large: 20 } },
+            { id: 77, name: "Lemon Fresh", emoji: "🍋", image: "", description: "Zesty lemon with bright yellow skin. Pucker up!", prices: { small: 10, medium: 14, large: 20 } },
+            { id: 78, name: "Pineapple Express", emoji: "🍍", image: "", description: "Tropical pineapple with spiky crown. Island vibes!", prices: { small: 12, medium: 17, large: 24 } },
+            { id: 79, name: "Grapes of Joy", emoji: "🍇", image: "", description: "Bunch of purple grapes. Vine and dandy!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 80, name: "Avocado Toast", emoji: "🥑", image: "", description: "Trendy avocado half with pit. Good fat friend!", prices: { small: 11, medium: 16, large: 22 } },
+            { id: 81, name: "Mushroom Magic", emoji: "🍄", image: "", description: "Red spotted mushroom. Fungi to be around!", prices: { small: 10, medium: 14, large: 20 } },
+            { id: 82, name: "Hot Stuff", emoji: "🌶️", image: "", description: "Spicy chili pepper. Bringing the heat!", prices: { small: 9, medium: 13, large: 18 } },
+            { id: 83, name: "Carrot Top", emoji: "🥕", image: "", description: "Orange carrot with leafy top. What's up doc?", prices: { small: 9, medium: 13, large: 18 } },
+            { id: 84, name: "Broccoli Boss", emoji: "🥦", image: "", description: "Little tree of broccoli. Green and mean!", prices: { small: 10, medium: 14, large: 20 } },
+            { id: 85, name: "Eggplant Emoji", emoji: "🍆", image: "", description: "Purple eggplant with green stem. Garden fresh!", prices: { small: 10, medium: 14, large: 20 } }
+        ];
+
+        // Cart management
+        let cart = JSON.parse(localStorage.getItem('cozyLoopsCart')) || [];
+        let adminTasks = JSON.parse(localStorage.getItem('cozyLoopsAdminTasks')) || [];
+        let unpaidInquiries = JSON.parse(localStorage.getItem('cozyLoopsUnpaidInquiries')) || [];
+
+        // Admin Panel Functions
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('open');
+            renderAdminTasks();
+            renderUnpaidInquiries();
+        }
+
+        function addUnpaidInquiry(inquiry) {
+            unpaidInquiries.push({
+                id: Date.now(),
+                customerName: inquiry.customerName,
+                customerEmail: inquiry.customerEmail,
+                customerPhone: inquiry.customerPhone,
+                total: inquiry.total,
+                itemCount: inquiry.itemCount,
+                items: inquiry.items,
+                time: new Date().toLocaleString(),
+                followedUp: false
+            });
+            saveUnpaidInquiries();
+            renderUnpaidInquiries();
+        }
+
+        function markInquiryPaid(inquiryId) {
+            const inquiry = unpaidInquiries.find(i => i.id === inquiryId);
+            if (inquiry && confirm(`Mark ${inquiry.customerName}'s inquiry as PAID?\n\nThis will send you a payment confirmation email.`)) {
+                // Send payment confirmation email
+                sendPaymentConfirmation(inquiry);
+                
+                // Remove from unpaid inquiries
+                unpaidInquiries = unpaidInquiries.filter(i => i.id !== inquiryId);
+                saveUnpaidInquiries();
+                renderUnpaidInquiries();
+                
+                alert(`✅ Marked as PAID!\n\nPayment confirmation email sent to atlasjrector@gmail.com`);
+            }
+        }
+
+        function sendPaymentConfirmation(inquiry) {
+            const subject = encodeURIComponent('🧶 Cozy Loops - ✅ PAYMENT RECEIVED (Follow-up)');
+            const body = encodeURIComponent(
+                `✅ PAYMENT RECEIVED - FOLLOW-UP FROM INQUIRY\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `CUSTOMER INFORMATION\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Name: ${inquiry.customerName}\n` +
+                `Email: ${inquiry.customerEmail}\n` +
+                `Phone: ${inquiry.customerPhone}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `ORDER DETAILS\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Total Amount PAID: $${inquiry.total}\n` +
+                `Total Items: ${inquiry.itemCount}\n\n` +
+                `${inquiry.items}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `💰 PAYMENT STATUS: ✅ RECEIVED AFTER INQUIRY\n\n` +
+                `Original inquiry sent: ${inquiry.time}\n` +
+                `Payment marked received: ${new Date().toLocaleString()}\n\n` +
+                `Next step: Process order and contact customer for delivery!`
+            );
+            
+            window.location.href = `mailto:atlasjrector@gmail.com?subject=${subject}&body=${body}`;
+        }
+
+        function removeUnpaidInquiry(inquiryId) {
+            if (confirm('Remove this inquiry? (They decided not to purchase)')) {
+                unpaidInquiries = unpaidInquiries.filter(i => i.id !== inquiryId);
+                saveUnpaidInquiries();
+                renderUnpaidInquiries();
+            }
+        }
+
+        function saveUnpaidInquiries() {
+            localStorage.setItem('cozyLoopsUnpaidInquiries', JSON.stringify(unpaidInquiries));
+        }
+
+        function renderUnpaidInquiries() {
+            const div = document.getElementById('unpaidInquiries');
+            if (!div) return;
+
+            if (unpaidInquiries.length === 0) {
+                div.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No unpaid inquiries</p>';
+                return;
+            }
+
+            div.innerHTML = unpaidInquiries.map(inquiry => `
+                <div class="todo-item" style="border-left-color: #ff9800;">
+                    <div class="todo-content" style="flex: 1;">
+                        <div class="todo-title">⚠️ ${inquiry.customerName} - $${inquiry.total}</div>
+                        <div class="todo-details">${inquiry.itemCount} items | ${inquiry.customerPhone}</div>
+                        <div class="todo-time">Inquiry: ${inquiry.time}</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn" style="padding: 0.5rem; font-size: 0.8rem; background: #4caf50;" onclick="markInquiryPaid(${inquiry.id})">Mark Paid</button>
+                        <button class="btn" style="padding: 0.5rem; font-size: 0.8rem; background: #f44336;" onclick="removeUnpaidInquiry(${inquiry.id})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addAdminTask(task) {
+            adminTasks.push({
+                id: Date.now(),
+                title: task.title,
+                details: task.details,
+                time: new Date().toLocaleString(),
+                completed: false,
+                type: task.type || 'custom'
+            });
+            saveAdminTasks();
+            renderAdminTasks();
+        }
+
+        function toggleTaskComplete(taskId) {
+            const task = adminTasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveAdminTasks();
+                renderAdminTasks();
+            }
+        }
+
+        function clearCompleted() {
+            if (confirm('Clear all completed tasks?')) {
+                adminTasks = adminTasks.filter(t => !t.completed);
+                saveAdminTasks();
+                renderAdminTasks();
+            }
+        }
+
+        function addCustomTask() {
+            const input = document.getElementById('customTaskInput');
+            const taskText = input.value.trim();
+            if (taskText) {
+                addAdminTask({
+                    title: taskText,
+                    details: 'Custom task',
+                    type: 'custom'
+                });
+                input.value = '';
+            } else {
+                alert('Please enter a task description');
+            }
+        }
+
+        function saveAdminTasks() {
+            localStorage.setItem('cozyLoopsAdminTasks', JSON.stringify(adminTasks));
+        }
+
+        function renderAdminTasks() {
+            const pending = adminTasks.filter(t => !t.completed);
+            const completed = adminTasks.filter(t => t.completed);
+
+            const pendingDiv = document.getElementById('pendingTasks');
+            const completedDiv = document.getElementById('completedTasks');
+
+            if (pending.length === 0) {
+                pendingDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No pending tasks! 🎉</p>';
+            } else {
+                pendingDiv.innerHTML = pending.map(task => `
+                    <div class="todo-item">
+                        <input type="checkbox" class="todo-checkbox" onchange="toggleTaskComplete(${task.id})">
+                        <div class="todo-content">
+                            <div class="todo-title">${task.title}</div>
+                            <div class="todo-details">${task.details}</div>
+                            <div class="todo-time">${task.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (completed.length === 0) {
+                completedDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">No completed tasks yet</p>';
+            } else {
+                completedDiv.innerHTML = completed.map(task => `
+                    <div class="todo-item completed">
+                        <input type="checkbox" class="todo-checkbox" checked onchange="toggleTaskComplete(${task.id})">
+                        <div class="todo-content">
+                            <div class="todo-title">${task.title}</div>
+                            <div class="todo-details">${task.details}</div>
+                            <div class="todo-time">${task.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Check if admin (you can customize this - e.g., check for specific URL parameter or password)
+        function checkIfAdmin() {
+            // Show admin toggle if URL contains ?admin or if running on localhost
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin') || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                document.getElementById('adminToggle').style.display = 'block';
+            }
+        }
+
+        function testPatternOpen() {
+            console.log('Testing pattern open with product ID 2 (Bunny)');
+            const success = openPatternPage(2);
+            if (success) {
+                alert('✅ Pattern opened successfully!\n\nIf you see a new tab with the bunny pattern, pop-ups are working correctly.');
+            } else {
+                alert('❌ Pattern failed to open.\n\nPlease check:\n1. Pop-up blocker settings\n2. Browser console for errors (F12)\n3. Try allowing pop-ups for this site');
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image" style="background: linear-gradient(135deg, ${getColorGradient(product.id)}); display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 10rem; text-shadow: 0 4px 8px rgba(0,0,0,0.2);">${product.emoji}</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div style="background: #f9f9f9; padding: 0.5rem; border-radius: 6px; margin: 0.75rem 0; font-size: 0.85rem; color: #666;">
+                            <strong>📐 Pattern Creates:</strong> Adorable ${product.name} with head, body, arms, legs, and signature features. Complete step-by-step instructions included!
+                        </div>
+                        <div class="price">Small (1-3"): $${product.prices.small} | Medium (5-7"): $${product.prices.medium} | Large (9-12"): $${product.prices.large}</div>
+                        <div class="size-selector">
+                            <label>Select Size:</label>
+                            <select id="size-${product.id}">
+                                <option value="small">Small (1-3") - $${product.prices.small}</option>
+                                <option value="medium" selected>Medium (5-7") - $${product.prices.medium}</option>
+                                <option value="large">Large (9-12") - $${product.prices.large}</option>
+                            </select>
+                        </div>
+                        <div class="pattern-price">📝 Crochet Pattern: $5-$10</div>
+                        <div class="size-selector" style="margin-top: 0.5rem;">
+                            <label>Pattern Size:</label>
+                            <select id="pattern-size-${product.id}">
+                                <option value="small">Small (1-3") - $5</option>
+                                <option value="medium">Medium (5-7") - $7</option>
+                                <option value="large">Large (9-12") - $8</option>
+                                <option value="all" selected>All 3 Sizes - $10</option>
+                            </select>
+                        </div>
+                        <p style="font-size: 0.85rem; color: #999; margin: 0.5rem 0; font-style: italic;">* Pattern must be purchased with a finished item</p>
+                        <div class="button-group">
+                            <button class="btn" onclick="addToCart(${product.id}, 'item')">Add Finished Item to Cart</button>
+                            <button class="btn btn-pattern" onclick="addToCartPattern(${product.id})">Add Pattern to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getColorGradient(productId) {
+            const colors = [
+                '#ffe4e1, #ffc0cb', // Pink - bears, bunnies
+                '#e6f3ff, #b3d9ff', // Blue - dolphins, whales
+                '#fff4e6, #ffe0b3', // Peach - dogs, cats
+                '#f0e6ff, #d9b3ff', // Purple - unicorns, dragons
+                '#e6ffe6, #b3ffb3', // Green - frogs, turtles
+                '#ffffcc, #ffff99', // Yellow - bees, suns
+                '#ffe6f0, #ffcce0', // Light pink - foods
+                '#e6f9ff, #b3f0ff', // Light blue - birds
+            ];
+            return colors[productId % colors.length];
+        }
+
+        function addToCart(productId, type) {
+            const product = products.find(p => p.id === productId);
+            let itemToAdd;
+            
+            if (type === 'pattern') {
+                itemToAdd = {
+                    id: `${productId}-pattern`,
+                    productId: productId,
+                    name: product.name + " - Pattern",
+                    emoji: product.emoji,
+                    type: 'pattern',
+                    price: 10,
+                    details: "Digital crochet pattern"
+                };
+            } else {
+                const sizeSelect = document.getElementById(`size-${productId}`);
+                const size = sizeSelect.value;
+                const sizeText = sizeSelect.options[sizeSelect.selectedIndex].text;
+                itemToAdd = {
+                    id: `${productId}-${size}`,
+                    productId: productId,
+                    name: product.name,
+                    emoji: product.emoji,
+                    type: 'item',
+                    size: size,
+                    price: product.prices[size],
+                    details: sizeText
+                };
+            }
+
+            // Check if item already exists
+            const existingIndex = cart.findIndex(item => item.id === itemToAdd.id);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+            } else {
+                itemToAdd.quantity = 1;
+                cart.push(itemToAdd);
+            }
+
+            saveCart();
+            updateCartDisplay();
+            
+            // Show feedback
+            alert(`✅ ${itemToAdd.name} added to cart!`);
+        }
+
+        function addToCartPattern(productId) {
+            const product = products.find(p => p.id === productId);
+            const patternSizeSelect = document.getElementById(`pattern-size-${productId}`);
+            const patternSize = patternSizeSelect.value;
+            const patternSizeText = patternSizeSelect.options[patternSizeSelect.selectedIndex].text;
+            
+            let price, details;
+            if (patternSize === 'all') {
+                price = 10;
+                details = "Pattern - All 3 Sizes";
+            } else if (patternSize === 'small') {
+                price = 5;
+                details = "Pattern - Small (1-3\") only";
+            } else if (patternSize === 'medium') {
+                price = 7;
+                details = "Pattern - Medium (5-7\") only";
+            } else if (patternSize === 'large') {
+                price = 8;
+                details = "Pattern - Large (9-12\") only";
+            }
+            
+            const itemToAdd = {
+                id: `${productId}-pattern-${patternSize}`,
+                productId: productId,
+                name: product.name + " - Pattern",
+                emoji: product.emoji,
+                type: 'pattern',
+                size: patternSize,
+                price: price,
+                details: details
+            };
+
+            // Check if item already exists
+            const existingIndex = cart.findIndex(item => item.id === itemToAdd.id);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+            } else {
+                itemToAdd.quantity = 1;
+                cart.push(itemToAdd);
+            }
+
+            saveCart();
+            updateCartDisplay();
+            
+            // Show feedback
+            alert(`✅ ${product.name} ${details} added to cart!`);
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            saveCart();
+            updateCartDisplay();
+        }
+
+        function saveCart() {
+            localStorage.setItem('cozyLoopsCart', JSON.stringify(cart));
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartBadge = document.getElementById('cartBadge');
+            const cartTotal = document.getElementById('cartTotal');
+
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = itemCount;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.emoji} ${item.name}</div>
+                        <div class="cart-item-details">${item.details}</div>
+                        <div class="cart-item-details">Qty: ${item.quantity}</div>
+                        <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const cart = document.getElementById('cartSidebar');
+            cart.classList.toggle('open');
+        }
+
+        function sendOrderToCustomer() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            // Check if cart has only patterns
+            const patterns = cart.filter(item => item.type === 'pattern');
+            const physicalItems = cart.filter(item => item.type === 'item');
+            
+            if (patterns.length > 0 && physicalItems.length === 0) {
+                alert('⚠️ Pattern Purchase Requirement\n\nTo purchase a pattern, you must also add at least one finished item to your cart.\n\nPatterns are only available with the purchase of a physical amigurumi!');
+                return;
+            }
+
+            // Get customer information
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const customerNotes = document.getElementById('customerNotes').value.trim();
+            
+            if (!customerName || !customerEmail || !customerPhone) {
+                alert('Please fill out Name, Email, and Phone in the contact form first.');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Create detailed order summary
+            const orderSummary = cart.map(item => {
+                let itemType = item.type === 'pattern' ? '📝 Pattern' : '🧶 Physical Item';
+                return `${itemType} - ${item.quantity}x ${item.name} - ${item.details} - $${(item.price * item.quantity).toFixed(2)}`;
+            }).join('\n');
+
+            const subject = encodeURIComponent('🧶 Cozy Loops - INQUIRY (NOT PAID YET)');
+            const body = encodeURIComponent(
+                `⚠️ CUSTOMER INQUIRY - PAYMENT NOT RECEIVED YET\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `CUSTOMER INFORMATION\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Name: ${customerName}\n` +
+                `Email: ${customerEmail}\n` +
+                `Phone: ${customerPhone}\n` +
+                `Address: ${customerAddress || 'Not provided'}\n` +
+                `Notes: ${customerNotes || 'None'}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `CART CONTENTS (INQUIRY ONLY)\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `${orderSummary}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `SUMMARY\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Total Items: ${itemCount}\n` +
+                `Digital Patterns: ${patterns.length}\n` +
+                `Physical Items: ${physicalItems.length}\n` +
+                `POTENTIAL TOTAL: $${total.toFixed(2)}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `⚠️ PAYMENT STATUS: NOT PAID - NO PAYMENT RECEIVED\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `ACTION REQUIRED:\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `1. Follow up with customer to convert inquiry to sale\n` +
+                `2. Contact: ${customerEmail} or ${customerPhone}\n` +
+                `3. DO NOT prepare or deliver items until payment received\n` +
+                `4. Once they pay, mark as PAID in admin panel\n\n` +
+                `Inquiry received: ${new Date().toLocaleString()}`
+            );
+
+            // Add to unpaid inquiries tracking
+            addUnpaidInquiry({
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                total: total.toFixed(2),
+                itemCount: itemCount,
+                items: orderSummary,
+                patterns: patterns.length,
+                physicalItems: physicalItems.length
+            });
+
+            // Send to YOUR email without triggering pop-up blocker
+            const mailtoLink = `mailto:atlasjrector@gmail.com?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+            
+            // Open pattern pages for any patterns in the cart
+            if (patterns.length > 0) {
+                setTimeout(() => {
+                    console.log(`Opening ${patterns.length} pattern pages...`);
+                    patterns.forEach((pattern, index) => {
+                        setTimeout(() => {
+                            const success = openPatternPage(pattern.productId);
+                            if (success) {
+                                console.log(`Pattern ${index + 1}/${patterns.length} opened successfully`);
+                            } else {
+                                console.error(`Failed to open pattern ${index + 1}/${patterns.length}`);
+                            }
+                        }, index * 250); // 250ms delay between each pattern
+                    });
+                }, 500); // Initial delay to let email open first
+            }
+            
+            // Show success message
+            setTimeout(() => {
+                let message = `✅ Inquiry sent to Cozy Loops!\n\nYour information and cart has been sent to atlasjrector@gmail.com.\n\nThis is an inquiry only - you have NOT been charged.`;
+                
+                if (patterns.length > 0) {
+                    message += `\n\n📝 Your ${patterns.length} pattern(s) are opening now!`;
+                }
+                
+                message += `\n\n💵 IMPORTANT: If we deliver, have money ready at the door!\nWe accept: Cash, Venmo, Zelle, or Card`;
+                
+                message += `\n\nWe'll contact you soon at ${customerEmail} or ${customerPhone} to discuss your order!`;
+                
+                alert(message);
+                
+                // Clear cart and close sidebar
+                cart = [];
+                saveCart();
+                updateCartDisplay();
+                toggleCart();
+            }, patterns.length > 0 ? 1000 : 100);
+        }
+
+        function checkout(paymentMethod) {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            // Validate customer information
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const customerNotes = document.getElementById('customerNotes').value.trim();
+
+            if (!customerName || !customerEmail || !customerPhone) {
+                alert('Please fill out all required fields (Name, Email, Phone) before checkout.');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(customerEmail)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Check if physical items require address
+            const physicalItems = cart.filter(item => item.type === 'item');
+            const patterns = cart.filter(item => item.type === 'pattern');
+            
+            if (physicalItems.length > 0 && !customerAddress) {
+                alert('Please provide a shipping address for physical items.');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            let paymentMethodText = '';
+            if (paymentMethod === 'apple') {
+                paymentMethodText = '🍎 Apple Pay';
+            } else if (paymentMethod === 'google') {
+                paymentMethodText = 'G Google Pay';
+            } else {
+                paymentMethodText = '💳 Standard Checkout';
+            }
+
+            // Show processing message
+            alert(`Processing ${paymentMethodText}...\n\nPlease wait while we process your order.`);
+
+            // AUTOMATICALLY send order email to you (in new window to avoid navigation)
+            const orderDetails = cart.map(item => 
+                `${item.quantity}x ${item.name} - ${item.details} - $${(item.price * item.quantity).toFixed(2)}`
+            ).join('\n');
+            
+            const subject = encodeURIComponent('🧶 Cozy Loops - ✅ ORDER PAID & CONFIRMED');
+            const body = encodeURIComponent(
+                `✅ NEW ORDER RECEIVED - PAYMENT CONFIRMED!\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `CUSTOMER INFORMATION\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Name: ${customerName}\n` +
+                `Email: ${customerEmail}\n` +
+                `Phone: ${customerPhone}\n` +
+                `Address: ${customerAddress || 'Not provided'}\n` +
+                `Notes: ${customerNotes || 'None'}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `ORDER DETAILS\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Payment Method: ${paymentMethodText}\n` +
+                `Total Amount PAID: $${total.toFixed(2)}\n` +
+                `Total Items: ${itemCount}\n\n` +
+                `${orderDetails}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `ORDER SUMMARY\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Digital Patterns: ${patterns.length} ${patterns.length > 0 ? '✅ DELIVERED' : ''}\n` +
+                `Physical Items: ${physicalItems.length} ${physicalItems.length > 0 ? '📦 NEED DELIVERY' : ''}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `💰 PAYMENT STATUS: ✅ CONFIRMED & PROCESSED\n\n` +
+                `${physicalItems.length > 0 ? 
+                    `📦 DELIVERY NEEDED: YES - ${physicalItems.length} physical item(s)\n\n` +
+                    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                    `🚚 DELIVERY INSTRUCTIONS:\n` +
+                    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                    `1. Contact ${customerName} ASAP\n` +
+                    `2. Phone: ${customerPhone}\n` +
+                    `3. Email: ${customerEmail}\n` +
+                    `4. Shipping Address: ${customerAddress || 'NOT PROVIDED - CONTACT CUSTOMER'}\n` +
+                    `5. Arrange delivery or pickup\n` +
+                    `6. Prepare these items:\n${physicalItems.map(item => `   - ${item.quantity}x ${item.name} (${item.details})`).join('\n')}\n\n`
+                    : 
+                    `📦 DELIVERY NEEDED: NO - Patterns only (already delivered)\n\n` +
+                    `✅ This order is COMPLETE - no action needed!\n` +
+                    `Digital patterns were automatically delivered to customer.\n\n`
+                }` +
+                `${patterns.length > 0 ? `✅ Digital patterns already delivered automatically to customer.\n\n` : ''}` +
+                `Order completed: ${new Date().toLocaleString()}\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `QUICK SUMMARY:\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `${physicalItems.length > 0 ? 
+                    `🚨 ACTION REQUIRED: Deliver ${physicalItems.length} physical item(s)\n` +
+                    `Call ${customerPhone} to arrange delivery/pickup` 
+                    : 
+                    `✅ NO ACTION NEEDED - Order complete!`
+                }`
+            );
+            
+            // Send email notification in a way that doesn't trigger pop-up blockers
+            const mailtoLink = `mailto:atlasjrector@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Use location.href instead of window.open to avoid pop-up blocker
+            const currentLocation = window.location.href;
+            window.location.href = mailtoLink;
+            
+            // Return to page after email client opens (short delay)
+            setTimeout(() => {
+                window.history.replaceState(null, '', currentLocation);
+            }, 100);
+
+            // Open pattern pages IMMEDIATELY for all pattern purchases
+            if (patterns.length > 0) {
+                // Open patterns immediately - not in setTimeout
+                let openedCount = 0;
+                patterns.forEach((pattern, index) => {
+                    setTimeout(() => {
+                        console.log('Attempting to open pattern for product ID:', pattern.productId);
+                        const result = openPatternPage(pattern.productId);
+                        if (result) openedCount++;
+                    }, index * 250);
+                });
+                
+                // Check if patterns opened after delay
+                setTimeout(() => {
+                    if (openedCount === 0 && patterns.length > 0) {
+                        alert('⚠️ Pattern windows may have been blocked!\n\nPlease allow pop-ups for this site, then you can:\n1. View your order history\n2. Re-download patterns\n\nOr contact us at (859) 247-2373');
+                    }
+                }, patterns.length * 250 + 500);
+            }
+            
+            // Show success message after brief delay
+            setTimeout(() => {
+                let successMessage = `✅ Payment Successful!\n\n`;
+                
+                successMessage += `📧 Order confirmation sent to atlasjrector@gmail.com\n\n`;
+                
+                if (patterns.length > 0) {
+                    successMessage += `📝 ${patterns.length} pattern(s) are opening in new tabs now!\n`;
+                    successMessage += `Check your browser for your crochet patterns.\n\n`;
+                }
+                
+                if (physicalItems.length > 0) {
+                    successMessage += `📦 Physical items: ${physicalItems.length}\n`;
+                    successMessage += `We'll contact you at ${customerPhone} to arrange delivery or pickup.\n\n`;
+                }
+                
+                successMessage += `Receipt will be sent to ${customerEmail}\n\n`;
+                successMessage += `Thank you for your purchase! 🧶`;
+                
+                alert(successMessage);
+
+                // Add delivery task to admin panel if physical items exist
+                if (physicalItems.length > 0) {
+                    addAdminTask({
+                        title: `Deliver to ${customerName}`,
+                        details: `${physicalItems.length} item(s) - Phone: ${customerPhone} - Total: $${total.toFixed(2)}`,
+                        type: 'delivery'
+                    });
+                }
+
+                // Clear cart and form after successful purchase
+                cart = [];
+                saveCart();
+                updateCartDisplay();
+                
+                // Clear form fields
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerAddress').value = '';
+                document.getElementById('customerNotes').value = '';
+                
+                toggleCart();
+            }, 1000);
+        }
+
+        function openPatternPage(productId) {
+            console.log('openPatternPage called with productId:', productId);
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error('Product not found for ID:', productId);
+                return false;
+            }
+            
+            console.log('Opening pattern for:', product.name);
+            
+            try {
+                // Generate pattern HTML
+                const patternHTML = generatePatternPage(product);
+                
+                // Create a blob and open it (doesn't trigger pop-up blocker)
+                const blob = new Blob([patternHTML], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                // Open in new tab
+                const newWindow = window.open(url, '_blank');
+                
+                if (newWindow) {
+                    console.log('Pattern window opened successfully');
+                    // Clean up the blob URL after a delay
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    return true;
+                } else {
+                    console.error('Window.open returned null - popup may be blocked');
+                    // Fallback: download as file
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${product.name.replace(/[^a-z0-9]/gi, '_')}_Pattern.html`;
+                    a.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    alert(`Pattern for ${product.name} has been downloaded!\n\nOpen the downloaded HTML file to view your pattern.`);
+                    return true;
+                }
+            } catch (error) {
+                console.error('Error opening pattern page:', error);
+                return false;
+            }
+        }
+
+        function generatePatternPage(product) {
+            return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${product.name} - Crochet Pattern</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            color: #333;
+            background: #faf8f5;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #c97d7d;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+        .emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            color: #a65d5d;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #666;
+            font-style: italic;
+        }
+        h2 {
+            color: #c97d7d;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #f5e6e6;
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            color: #a65d5d;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .materials {
+            background: #f5e6e6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #ffd700;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .tip {
+            background: #e6f5ff;
+            border-left: 4px solid #4a9eff;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .step {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #c97d7d;
+        }
+        .abbreviations {
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .print-btn {
+            background: #c97d7d;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: block;
+            margin: 2rem auto;
+            font-family: 'Georgia', serif;
+        }
+        .print-btn:hover {
+            background: #a65d5d;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 1rem;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">${product.emoji}</div>
+            <h1>${product.name}</h1>
+            <p class="subtitle">Amigurumi Crochet Pattern</p>
+        </div>
+
+        <div class="note">
+            <strong>📝 Pattern Notes:</strong> This pattern is written in US crochet terminology. The finished size depends on your yarn weight and hook size. Small (1-3") uses sport weight, Medium (5-7") uses worsted weight, Large (9-12") uses bulky weight.
+        </div>
+
+        <h2>Materials Needed</h2>
+        <div class="materials">
+            <ul>
+                <li><strong>Yarn:</strong> Medium weight (worsted) yarn in main color and accent colors as desired</li>
+                <li><strong>Hook:</strong> Size G/4.0mm (adjust for desired size)</li>
+                <li><strong>Stuffing:</strong> Polyester fiberfill</li>
+                <li><strong>Safety Eyes:</strong> 8-12mm (or embroider eyes)</li>
+                <li><strong>Yarn Needle:</strong> For sewing pieces together</li>
+                <li><strong>Stitch Marker:</strong> To mark beginning of rounds</li>
+                <li><strong>Scissors</strong></li>
+            </ul>
+        </div>
+
+        <div class="abbreviations">
+            <strong>Abbreviations:</strong><br>
+            ch = chain | sc = single crochet | inc = increase (2 sc in same stitch) | dec = decrease (sc2tog) | 
+            sl st = slip stitch | MR = magic ring | BLO = back loop only | FLO = front loop only | 
+            ( ) = repeat instructions within parentheses | [ ] = total stitch count
+        </div>
+
+        <h2>Head</h2>
+        <div class="step">
+            <strong>Round 1:</strong> Start with MR, 6 sc in ring [6]
+        </div>
+        <div class="step">
+            <strong>Round 2:</strong> inc in each stitch around [12]
+        </div>
+        <div class="step">
+            <strong>Round 3:</strong> (sc, inc) repeat 6 times [18]
+        </div>
+        <div class="step">
+            <strong>Round 4:</strong> (2 sc, inc) repeat 6 times [24]
+        </div>
+        <div class="step">
+            <strong>Round 5:</strong> (3 sc, inc) repeat 6 times [30]
+        </div>
+        <div class="step">
+            <strong>Round 6:</strong> (4 sc, inc) repeat 6 times [36]
+        </div>
+        <div class="step">
+            <strong>Rounds 7-12:</strong> sc in each stitch around [36] (6 rounds)
+        </div>
+        <div class="tip">
+            💡 <strong>Tip:</strong> Insert safety eyes between rounds 9 and 10, about 6-8 stitches apart. Secure before stuffing!
+        </div>
+        <div class="step">
+            <strong>Round 13:</strong> (4 sc, dec) repeat 6 times [30]
+        </div>
+        <div class="step">
+            <strong>Round 14:</strong> (3 sc, dec) repeat 6 times [24]
+        </div>
+        <div class="step">
+            <strong>Round 15:</strong> (2 sc, dec) repeat 6 times [18]
+        </div>
+        <p><em>Stuff head firmly</em></p>
+        <div class="step">
+            <strong>Round 16:</strong> (sc, dec) repeat 6 times [12]
+        </div>
+        <div class="step">
+            <strong>Round 17:</strong> dec around [6]
+        </div>
+        <p><em>Fasten off, close hole with yarn needle</em></p>
+
+        <h2>Body</h2>
+        <div class="step">
+            <strong>Round 1:</strong> Start with MR, 6 sc in ring [6]
+        </div>
+        <div class="step">
+            <strong>Round 2:</strong> inc in each stitch around [12]
+        </div>
+        <div class="step">
+            <strong>Round 3:</strong> (sc, inc) repeat 6 times [18]
+        </div>
+        <div class="step">
+            <strong>Round 4:</strong> (2 sc, inc) repeat 6 times [24]
+        </div>
+        <div class="step">
+            <strong>Round 5:</strong> (3 sc, inc) repeat 6 times [30]
+        </div>
+        <div class="step">
+            <strong>Rounds 6-12:</strong> sc in each stitch around [30] (7 rounds)
+        </div>
+        <div class="step">
+            <strong>Round 13:</strong> (3 sc, dec) repeat 6 times [24]
+        </div>
+        <div class="step">
+            <strong>Round 14:</strong> (2 sc, dec) repeat 6 times [18]
+        </div>
+        <p><em>Stuff body firmly</em></p>
+        <div class="step">
+            <strong>Round 15:</strong> (sc, dec) repeat 6 times [12]
+        </div>
+        <p><em>Leave long tail for sewing to head. Don't close yet.</em></p>
+
+        <h2>Arms (Make 2)</h2>
+        <div class="step">
+            <strong>Round 1:</strong> Start with MR, 6 sc in ring [6]
+        </div>
+        <div class="step">
+            <strong>Round 2:</strong> (sc, inc) repeat 3 times [9]
+        </div>
+        <div class="step">
+            <strong>Rounds 3-8:</strong> sc in each stitch around [9] (6 rounds)
+        </div>
+        <p><em>Stuff lightly, flatten and close with sc across. Leave tail for sewing.</em></p>
+
+        <h2>Legs (Make 2)</h2>
+        <div class="step">
+            <strong>Round 1:</strong> Start with MR, 6 sc in ring [6]
+        </div>
+        <div class="step">
+            <strong>Round 2:</strong> inc in each stitch around [12]
+        </div>
+        <div class="step">
+            <strong>Round 3:</strong> BLO, sc in each stitch around [12]
+        </div>
+        <div class="step">
+            <strong>Rounds 4-8:</strong> sc in each stitch around [12] (5 rounds)
+        </div>
+        <p><em>Stuff lightly, flatten and close with sc across. Leave tail for sewing.</em></p>
+
+        <h2>Ears (Make 2)</h2>
+        <div class="step">
+            <strong>Round 1:</strong> Start with MR, 4 sc in ring [4]
+        </div>
+        <div class="step">
+            <strong>Round 2:</strong> inc in each stitch around [8]
+        </div>
+        <div class="step">
+            <strong>Round 3:</strong> (sc, inc) repeat 4 times [12]
+        </div>
+        <div class="step">
+            <strong>Round 4:</strong> sc in each stitch around [12]
+        </div>
+        <p><em>Flatten and leave tail for sewing. Don't stuff.</em></p>
+
+        <h2>Assembly</h2>
+        <ol>
+            <li>Sew head to body securely, making sure it's centered</li>
+            <li>Attach arms to sides of body at shoulder level (around rounds 2-3 of body)</li>
+            <li>Attach legs to bottom of body, positioning for sitting or standing</li>
+            <li>Sew ears to top sides of head (positioning depends on character)</li>
+            <li>Embroider nose/mouth with black or pink yarn</li>
+            <li>Add any character-specific details (tail, wings, accessories)</li>
+        </ol>
+
+        <div class="tip">
+            💡 <strong>Customization Tips:</strong>
+            <ul>
+                <li>Change colors to match your vision</li>
+                <li>Add stripes by changing colors mid-round</li>
+                <li>Make ears longer/shorter by adding/removing rounds</li>
+                <li>Add a tail by making a small tube (similar to arms)</li>
+                <li>Embroider details like spots, stripes, or patterns</li>
+                <li>Create clothes or accessories with surface crochet</li>
+            </ul>
+        </div>
+
+        <h2>Character-Specific Details for ${product.name}</h2>
+        <div class="note">
+            ${getCharacterSpecificDetails(product)}
+        </div>
+
+        <div class="tip">
+            <strong>🎨 Finishing Touches:</strong><br>
+            Weave in all ends securely. Give your creation a gentle steam or press with damp cloth if needed. Add personality with facial expressions, props, or outfits!
+        </div>
+
+        <button class="print-btn" onclick="window.print()">🖨️ Print Pattern</button>
+
+        <footer style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #f5e6e6; color: #999;">
+            <p>Thank you for purchasing from Cozy Loops! 🧶</p>
+            <p>📞 (859) 247-2373 | 📧 atlasjrector@gmail.com</p>
+            <p>Share your creations with us!</p>
+            <p style="font-size: 0.9rem; margin-top: 1rem;">© 2024 Cozy Loops. For personal use only.</p>
+        </footer>
+    </div>
+</body>
+</html>
+            `;
+        }
+
+        function getCharacterSpecificDetails(product) {
+            const details = {
+                1: "For the teddy bear, use brown yarn and embroider a small smile. Add a tiny bow tie or scarf for extra charm!",
+                2: "Make the bunny ears extra long by adding 2-3 more rounds. Use white or cream yarn for the body and pink for inner ears.",
+                3: "For the puppy, use floppy ears (don't stuff) and add spots with embroidery or surface crochet. Add a tail!",
+                4: "Create the kitten with pointed ears (triangle shape). Add whiskers with black thread or embroidery floss.",
+                5: "The tiger needs orange yarn with black stripes. Embroider stripes or surface crochet them on after assembly.",
+                6: "Make the lion's mane by adding loops or fringe around the head in a darker shade. Use yellow/gold for body.",
+                7: "The elephant needs a trunk! Make it like an arm but attach to the face. Add large ears using the ear pattern enlarged.",
+                8: "Use black and white yarn for the panda. Make dark circles around the eyes and black ears, arms, and legs.",
+                9: "The dolphin should be sleek - use grey/blue yarn and make it slightly more elongated. Add a dorsal fin!",
+                10: "For the turtle, crochet a flat circle for the shell and attach to the body. Add hexagon patterns on the shell.",
+                25: "The unicorn needs a horn! Make a small cone and attach to forehead. Add rainbow-colored mane and tail.",
+                48: "The dragon needs wings and a tail! Make triangular wings and attach. Add spikes along the back with small triangles."
+            };
+            
+            return details[product.id] || `Customize this ${product.name} with your favorite colors! Add character-specific features like extra appendages, patterns, or accessories to make it uniquely yours. Consider the emoji ${product.emoji} for inspiration on colors and special features.`;
+        }
+
+        function handleContact(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Create mailto link
+            const subject = encodeURIComponent('Cozy Loops - Contact Form');
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+            window.location.href = `mailto:atlasjrector@gmail.com?subject=${subject}&body=${body}`;
+            
+            alert('Thank you for your message! Your email client will open to send the message.');
+            e.target.reset();
+        }
+
+        // Initialize
+        window.onload = function() {
+            renderProducts();
+            updateCartDisplay();
+            checkIfAdmin();
+            renderAdminTasks();
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
